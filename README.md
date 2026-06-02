@@ -1,81 +1,190 @@
 <div align="center">
-  <img src="./autodoc.png" alt="AutoDoc.ai Logo" height="400">
 
-  ### ✨ Crafting Professional Documentation with AI Precision
+<img src="./autodoc.png" alt="AutoDoc.ai Logo" height="400">
 
-  <p>An open-source developer tool that automatically generates high-quality READMEs, CONTRIBUTING guides, and API documentation.</p>
+<br/>
 
-  <div align="center">
-    <img src="https://img.shields.io/github/contributors/abhro05/AutoDoc.ai" alt="Contributors">
-    <img src="https://img.shields.io/github/forks/abhro05/AutoDoc.ai" alt="Forks">
-    <img src="https://img.shields.io/github/stars/abhro05/AutoDoc.ai?style=social" alt="GitHub Stars">
-    <img src="https://img.shields.io/github/issues/abhro05/AutoDoc.ai" alt="Issues">
-    <img src="https://img.shields.io/github/issues-pr/abhro05/AutoDoc.ai" alt="Pull Requests">
-  </div>
+### ✨ Crafting Professional Documentation with AI Precision
+
+<p><strong>An open-source developer tool that automatically generates high-quality READMEs, CONTRIBUTING guides, and API documentation — so your code finally gets the docs it deserves.</strong></p>
+
+<br/>
+
+<div align="center">
+
+[![Contributors](https://img.shields.io/github/contributors/abhro05/AutoDoc.ai?color=0891b2&style=for-the-badge&logo=github)](https://github.com/abhro05/AutoDoc.ai/graphs/contributors)
+[![Forks](https://img.shields.io/github/forks/abhro05/AutoDoc.ai?color=6366f1&style=for-the-badge&logo=github)](https://github.com/abhro05/AutoDoc.ai/network/members)
+[![Stars](https://img.shields.io/github/stars/abhro05/AutoDoc.ai?color=f59e0b&style=for-the-badge&logo=github)](https://github.com/abhro05/AutoDoc.ai/stargazers)
+[![Issues](https://img.shields.io/github/issues/abhro05/AutoDoc.ai?color=ef4444&style=for-the-badge&logo=github)](https://github.com/abhro05/AutoDoc.ai/issues)
+[![Pull Requests](https://img.shields.io/github/issues-pr/abhro05/AutoDoc.ai?color=22c55e&style=for-the-badge&logo=github)](https://github.com/abhro05/AutoDoc.ai/pulls)
+[![License](https://img.shields.io/github/license/abhro05/AutoDoc.ai?color=8b5cf6&style=for-the-badge)](./LICENSE)
+
+</div>
+
+<br/>
+
+<a href="#-about-autodocai">About</a> •
+<a href="#️-setup-instructions">Setup</a> •
+<a href="#-system-architecture">Architecture</a> •
+<a href="#-project-structure">Structure</a> •
+<a href="#️-tech-stack">Tech Stack</a> •
+<a href="#️-roadmap">Roadmap</a> •
+<a href="#-contributing">Contributing</a> •
+<a href="#-license-and-maintainer">License</a>
+
 </div>
 
 ---
 
-# 📖 About AutoDoc.ai
+## 📖 About AutoDoc.ai
 
-**AutoDoc.ai** addresses the challenge of outdated documentation due to time constraints. It analyzes repository structures and source code to generate structured content while keeping humans in control via manual editing and previews.
+> **"Because great code deserves great documentation."**
+
+Every developer knows the feeling — you've just shipped an amazing project, but the documentation is either missing, outdated, or consists of three bullet points and a TODO comment. **AutoDoc.ai** was built to solve exactly this problem.
+
+**AutoDoc.ai** is an intelligent, open-source documentation engine that deeply analyzes your repository structure and source code to generate comprehensive, structured, and production-ready documentation — automatically. It respects developer autonomy by keeping humans firmly in control through live previews and manual editing, while the AI handles the heavy lifting.
+
+Whether you're preparing a project for an open-source hackathon, a job portfolio, or a collaborative team environment, AutoDoc.ai ensures your repository makes the best possible first impression.
+
+### 🌟 Key Features
+
+| Feature | Description |
+|:---|:---|
+| 🔍 **Deep Repo Analysis** | Scans repository structure, configuration files, and code patterns for comprehensive understanding |
+| ⚡ **Instant Generation** | Creates README.md, CONTRIBUTING.md, and API docs in seconds, not hours |
+| 🌐 **API Documentation** | Dedicated support for REST API endpoint documentation generation |
+| 👁️ **Live Preview** | React-based real-time markdown preview with inline manual editing |
+| 📤 **Export Ready** | One-click export producing clean, production-ready documentation files |
+| 🤖 **AI-Powered Accuracy** | Gemini API integration for context-aware, intelligent content generation |
+| 🧩 **Modular Architecture** | Three-layer design enabling easy extension and customization |
+| 🔓 **100% Open Source** | MIT Licensed — free for personal, academic, and commercial use |
 
 ---
 
-# 🌟 Key Features
+## ⚙️ Setup Instructions
 
-- Repo Analysis: Deep scanning of repository structure and configuration files.
-- Automatic Generation: Instant creation of README.md and CONTRIBUTING.md files.
-- API Support: Dedicated documentation generation for API endpoints.
-- Live Preview: React-based markdown preview with manual editing capabilities.
-- Export Ready: One-click export for production-ready documentation files.
+> [!IMPORTANT]
+> Ensure you have **Node.js v18 or later** installed before getting started.
 
----
-
-# ⚙️ Setup Instructions
-
-> Ensure you have your Gemini API key and GitHub token ready before starting the services.
-
----
-
-## 1. Clone the Repository (download the project locally)
+### 1. Clone the Repository
 
 ```bash
 git clone https://github.com/abhro05/AutoDoc.ai.git
 cd AutoDoc.ai
-
-# Frontend Setup
-cd frontend
-npm install
-
-# Backend Setup
-cd ../backend
-npm install
-
-# AI Service Setup
-cd ../ai_service
-pip install -r requirements.txt
 ```
-# 🔄 System Architecture
-The system utilizes a modular three-layer architecture to manage the documentation workflow
-- Frontend: React web interface for URL input and previews
-- Backend: Node.js/Express server orchestrating GitHub API interactions
-- AI Service: Python microservice integrating with Gemini API to summarize code
-- Data Flow: User → React UI → Node.js Backend → Python AI Service → Node.js Backend → React UI
-``` mermaid
+
+### 2. Install Dependencies
+
+```bash
+npm install
+```
+
+### 3. Start the Development Server
+
+```bash
+npm run dev
+```
+
+The application will be available at:
+
+```text
+http://localhost:5173
+```
+
+### 4. Build for Production
+
+```bash
+npm run build
+```
+
+### 5. Preview the Production Build
+
+```bash
+npm run preview
+```
+
+> [!TIP]
+> If you encounter dependency-related issues, delete `node_modules` and `package-lock.json`, then run `npm install` again.
+
+---
+
+## 🔄 System Architecture
+
+AutoDoc.ai currently follows a lightweight client-side architecture built with React and Vite. The application is organized into reusable pages and components, providing a fast and responsive user experience while maintaining a clean and scalable codebase.
+
+```text
+                                        ┌─────────────────────────────────────────────┐
+                                        │                User Browser                 │
+                                        │                                             │
+                                        │        React + Vite Frontend App            │
+                                        │                                             │
+                                        │  Home Page → Generator → Contributors       │
+                                        └─────────────────────────────────────────────┘
+```
+
+### Application Flow
+
+```mermaid
 graph LR
-    A[React UI] -- Repo URL --> B[Node.js Backend]
-    B -- Parse Files --> C[Python AI Service]
-    C -- Summarization --> D[Gemini API]
-    D -- Doc Content --> C
-    C -- Markdown --> B
-    B -- Preview --> A
-    
-    style A fill:#0A192F,stroke:#333
-    style B fill:#064E3B,stroke:#333
-    style C fill:#0A192F,stroke:#333
-    style D fill:#064E3B,stroke:#333
+    A[🏠 Home Page] --> B[⚡ Generator]
+    B --> C[📄 Generated Output]
+    A --> D[👥 Contributors]
+
+    style A fill:#0A192F,stroke:#38BDF8,color:#fff
+    style B fill:#064E3B,stroke:#34D399,color:#fff
+    style C fill:#1E1B4B,stroke:#818CF8,color:#fff
+    style D fill:#7C2D12,stroke:#FB923C,color:#fff
 ```
+
+### Architecture Overview
+
+| Layer            | Technology       | Responsibility                                     |
+| :--------------- | :--------------- | :------------------------------------------------- |
+| **Frontend**     | React 18 + Vite  | User interface, routing, and application rendering |
+| **Pages**        | React Components | Home, Generator, and Contributors views            |
+| **Styling**      | CSS3             | Responsive layout and visual design                |
+| **Build System** | Vite             | Development server and production builds           |
+
+> [!NOTE]
+> The project architecture is designed to evolve over time, with future plans including AI-powered documentation generation, backend integrations, and expanded automation capabilities.
+
+---
+
+## 📁 Project Structure
+
+```text
+AutoDoc.ai/
+│
+├── .github/
+│   └── ISSUE_TEMPLATE/
+│       ├── ❄️-feature-request.md
+│       ├── 🐛-bug-report.md
+│       ├── 💬-general---blank-issue.md
+│       └── 📝-documentation-update.md
+│
+├── src/
+│   ├── main.jsx                    # React application entry point
+│   │
+│   ├── pages/
+│   │   ├── App.jsx                 # Application routing and layout
+│   │   ├── Home.jsx                # Landing page
+│   │   ├── Generator.jsx           # Documentation generator interface
+│   │   └── Contributors.jsx        # Contributors showcase page
+│   │
+│   └── styles/
+│       ├── home.css                # Home page styling
+│       ├── Generator.css           # Generator page styling
+│       └── Contributors.css        # Contributors page styling
+│
+├── index.html                      # Main HTML template
+├── package.json                    # Project metadata and dependencies
+├── package-lock.json               # Dependency lock file
+├── vite.config.js                  # Vite configuration
+├── README.md                       # Project documentation
+├── LICENSE                         # MIT License
+└── autodoc.png                     # Project logo and branding
+```
+---
 ## 🛠️ Tech Stack
 
 AutoDoc.ai is built with a modular, scalable architecture across three specialized layers.
@@ -110,107 +219,198 @@ AutoDoc.ai is built with a modular, scalable architecture across three specializ
 
 ---
 
-#  🗺️ Roadmap
+## 🗺️ Roadmap
+
+AutoDoc.ai is continuously evolving to provide a better documentation experience for developers and open-source contributors.
+
 ```mermaid
 graph TD
-    Root[AutoDoc.ai Roadmap]
-    
-    Root --> P1[Phase 1: MVP]
-    P1 --> P1_1[Core README Generator]
-    P1 --> P1_2[Manual Export Functionality]
-    
-    Root --> P2[Phase 2: Enhancement]
-    P2 --> P2_1[Documentation Quality Scoring]
-    P2 --> P2_2[Code Comment Summarization]
-    
-    Root --> P3[Phase 3: Automation]
-    P3 --> P3_1[GitHub App Integration]
-    P3 --> P3_2[PR Documentation Suggestions]
-    
-    Root --> P4[Phase 4: Community Growth]
-    P4 --> P4_1[Plugin System]
-    P4 --> P4_2[Community Prompt Templates]
+    Root["🚀 AutoDoc.ai Roadmap"]
 
-    style Root fill:#38BDF8,stroke:#333,color:#000
-    style P1 fill:#34D399,stroke:#333,color:#000
-    style P2 fill:#34D399,stroke:#333,color:#000
-    style P3 fill:#34D399,stroke:#333,color:#000
-    style P4 fill:#34D399,stroke:#333,color:#000
+    Root --> P1["📦 Foundation"]
+    P1 --> P1_1["✅ Modern React + Vite Frontend"]
+    P1 --> P1_2["✅ Documentation Generator Interface"]
+    P1 --> P1_3["✅ Contributors Showcase"]
+
+    Root --> P2["⚡ Core Features"]
+    P2 --> P2_1["🔄 Enhanced Documentation Generation"]
+    P2 --> P2_2["📄 Export Improvements"]
+    P2 --> P2_3["🎨 Improved User Experience"]
+
+    Root --> P3["🤖 AI Integration"]
+    P3 --> P3_1["💡 Intelligent Documentation Suggestions"]
+    P3 --> P3_2["📝 README Generation Assistance"]
+    P3 --> P3_3["🔍 Repository Analysis Features"]
+
+    Root --> P4["🌍 Open Source Growth"]
+    P4 --> P4_1["📚 Better Contributor Resources"]
+    P4 --> P4_2["🧪 Expanded Testing"]
+    P4 --> P4_3["🚀 Deployment & Automation"]
 ```
-## 📅 Implementation Milestones
 
-### 🏗️ Milestone 1: Project Setup
-- [ ] Repository initialization.
-- [ ] Basic React frontend setup.
-- [ ] Node.js backend scaffolding.
+### Current Progress
 
-### 🔍 Milestone 2: Repository Analysis
-- [ ] GitHub API integration.
-- [ ] File structure parsing.
+```text
+Foundation               ████████████████████  Complete ✅
+Core Features            ██████████░░░░░░░░░░  In Progress 🚧
+AI Integration           ███░░░░░░░░░░░░░░░░░  Planned 📋
+Open Source Growth       ██░░░░░░░░░░░░░░░░░░  Future 💡
+```
 
-### 🤖 Milestone 3: AI Integration
-- [ ] Python microservice setup.
-- [ ] Gemini API prompt design.
+### Planned Improvements
 
-### ✍️ Milestone 4: Documentation Generation
-- [ ] README and CONTRIBUTING generation.
-- [ ] Markdown preview and editing interface.
+#### 🎨 User Experience
 
-### 🚀 Milestone 5: Quality and Expansion
-- [ ] API documentation support.
-- [ ] Architecture summaries.
+* [ ] Improve UI responsiveness across devices
+* [ ] Enhance accessibility and usability
+* [ ] Refine navigation and page layouts
 
+#### 📄 Documentation Features
 
-### 🌐 Milestone 6: Open Source Readiness
-- [ ] Comprehensive tests and linting.
-- [ ] Project documentation and examples.
+* [ ] Improve generated documentation quality
+* [ ] Add additional export options
+* [ ] Expand customization capabilities
+
+#### 🤖 AI-Powered Enhancements
+
+* [ ] Intelligent documentation assistance
+* [ ] Repository structure analysis
+* [ ] Context-aware content suggestions
+
+#### 🌐 Open Source Development
+
+* [ ] Increase test coverage
+* [ ] Improve contributor onboarding
+* [ ] Add automated workflows and CI/CD support
+* [ ] Expand community-driven contributions
+
 
 ---
-# 🌟 Participation and Contributing
 
-AutoDoc.ai is built to promote best practices in documentation and modular system design while attracting contributors of all skill levels. The project is designed to be a high-impact, scalable tool for the open-source community.
+## 🌟 Contributing
 
-### Open Source Programs
+AutoDoc.ai thrives because of contributors like you. Whether you're fixing a typo, building a feature, or improving AI prompts — every contribution matters and is recognized.
 
-| Program | Name | Timeline |
-| :--- | :--- | :--- |
-| **Resourcio Community** | Aperture 3.0 | Jan 1 – March 1, 2026 |
+### 🏆 Open Source Programs
 
-### How to Get Involved
+| Program | Event | Timeline | Status |
+|:---|:---|:---|:---|
+| ![SSOC](https://img.shields.io/badge/SSOC-Season_of_Open_Source-FF6B35?style=flat-square) | **Social Summer of Code** | Summer 2026 | 🟢 Active |
 
-We are currently in the **Open Source Readiness** phase, focusing on comprehensive testing and clear examples. You can contribute by:
 
-1. **Forking** the repository and creating a feature branch.
-2. **Improving AI Prompts**: Help refine the Gemini API prompt designs for better documentation accuracy.
-3. **Enhancing Features**: Contribute to the development of documentation quality scoring or code comment summarization.
-4. **Building the Community**: Help us reach **Phase 4** by designing plugin systems or community prompt templates.
+> [!NOTE]
+> AutoDoc.ai is an **SSOC-selected project**. Contributing during the program window earns you official SSOC points, certificates, and recognition on the leaderboard. All accepted PRs during the event will be labeled `ssoc`.
+
+### 🚀 How to Get Involved
+
+We're currently in the **Open Source Readiness** phase and actively welcoming contributors of all skill levels.
+
+#### For Beginners 🌱
+- Fix typos, grammar, or formatting in documentation
+- Add missing code comments or docstrings
+- Improve error messages for better developer experience
+- Write or improve existing tests
+
+#### For Intermediate Contributors 🌿
+- Implement documentation quality scoring
+- Add support for additional AI providers (OpenAI, Cohere, etc.)
+- Improve GitHub API rate-limit handling and caching
+- Build new export formats (PDF, HTML, Notion)
+
+#### For Advanced Contributors 🌳
+- Design the GitHub App integration (Phase 3)
+- Architect the plugin system (Phase 4)
+- Implement PR-based documentation suggestion workflows
+- Build the community prompt template marketplace
+
+### 🛤️ Contribution Workflow
+
+```bash
+# 1. Fork the repository on GitHub
+
+# 2. Clone your fork
+git clone https://github.com/YOUR_USERNAME/AutoDoc.ai.git
+cd AutoDoc.ai
+
+# 3. Create a descriptive feature branch
+git checkout -b feat/your-feature-name
+# or: fix/bug-description | docs/update-section | test/add-coverage
+
+# 4. Make your changes with clear, atomic commits
+git commit -m "feat: add documentation quality scoring UI"
+
+# 5. Push and open a Pull Request
+git push origin feat/your-feature-name
+```
+
+### 📋 Pull Request Checklist
+
+Before submitting your PR, ensure:
+
+- [ ] Code follows the existing style conventions
+- [ ] New features include appropriate tests
+- [ ] Documentation is updated to reflect changes
+- [ ] The PR description clearly explains **what** and **why**
+- [ ] All existing tests pass locally
+- [ ] No sensitive data (API keys, tokens) is committed
 
 > [!TIP]
-> Read our full **[CONTRIBUTING.md](./CONTRIBUTING.md)** for detailed environment setup and pull request guidelines.
+> Read the full **[CONTRIBUTING.md](./CONTRIBUTING.md)** for detailed environment setup, coding standards, commit message conventions, and pull request guidelines.
 
+### 🏅 Contributor Recognition
+
+All contributors are featured on our Contributors page and in the project README. Significant contributors will be recognized with special badges and invited to join the maintainer team.
 
 ---
 
-# 📄 License and Maintainer
+## 📄 License and Maintainer
 
-### License
-This project is licensed under the **MIT License**. This ensures the tool remains open and accessible for academic projects, hackathons, and long-term community development.
+### 📜 License
 
-### Maintainer
+This project is licensed under the **[MIT License](./LICENSE)**.
+
+The MIT License ensures AutoDoc.ai remains **forever free and open** — use it in your academic projects, hackathons, startup products, or enterprise workflows without restriction. We only ask that you keep the license notice intact and consider contributing improvements back to the community.
+
+```
+Copyright (c) 2025 Abhro
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction...
+```
+
+### 👨‍💻 Maintainer
+
 <div align="center">
-  <p>
-    <strong>❄️Abhro</strong><br>
-    <em>Full-Stack Developer | Data Science Specialization</em>
-  </p>
-  <p>
-    <a href="https://github.com/abhro05">
-      <img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub">
-    </a>
-    <a href="https://www.linkedin.com/in/mayurpagote">
-      <img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn">
-    </a>
-  </p>
-  <p><sub>"Because great code deserves great documentation."</sub></p>
+
+<br/>
+
+<img src="https://github.com/abhro05.png" width="100" height="100" style="border-radius: 50%;" alt="Abhro"/>
+
+<br/>
+
+**❄️ Abhro**
+*Full-Stack Developer · Data Science Specialization*
+
+*Building tools that make developers' lives easier, one commit at a time.*
+
+<br/>
+
+[![GitHub](https://img.shields.io/badge/GitHub-@abhro05-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/abhro05)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/mayurpagote)
+
+<br/>
+
 </div>
 
 ---
+
+<div align="center">
+
+**Made with ❤️ by the AutoDoc.ai community**
+
+*"Because great code deserves great documentation."*
+
+<sub>© 2025 AutoDoc.ai · MIT Licensed · Open Source Forever</sub>
+
+</div>
