@@ -138,11 +138,11 @@
 
 .workspace {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2rem;
-  padding: 7.5rem 5% 3rem;
+  grid-template-columns: 280px 1.1fr 1.3fr;
+  gap: 1.5rem;
+  padding: 7.5rem 3% 3rem;
   min-height: calc(100vh - 7.5rem);
-  max-width: 1400px;
+  max-width: 1550px;
   margin: 0 auto;
   animation: fadeInUp 0.5s ease-out;
 }
@@ -152,7 +152,23 @@
   border-radius: 16px;
   padding: 1.25rem 2.5rem 2.5rem;
   border: 1px solid var(--border-color);
-  height: 450px;
+  height: auto;
+}
+
+.repo-url-input-wrapper {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.repo-url-input-wrapper .text-input {
+  flex: 1;
+}
+
+.repo-url-input-wrapper .load-tree-btn {
+  padding: 0.85rem 1.25rem;
+  font-size: 0.9rem;
+  border-radius: 10px;
+  flex-shrink: 0;
 }
 
 .panel-title {
@@ -504,6 +520,11 @@
     padding: 7.5rem 5% 2rem;
   }
 
+  .file-tree-panel {
+    margin-bottom: 1.5rem;
+    height: 380px;
+  }
+
   .control-panel {
     margin-bottom: 1.5rem;
     height: auto;
@@ -537,4 +558,199 @@
     padding: 0.35rem 0.7rem;
     font-size: 0.85rem;
   }
+}
+
+/* File Tree Explorer Styling */
+.file-tree-panel {
+  background: var(--bg-secondary);
+  border-radius: 16px;
+  padding: 1.5rem;
+  border: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  height: 510px; /* match output panel height */
+  box-sizing: border-box;
+}
+
+.panel-subtitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-top: 0;
+  margin-bottom: 1rem;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+}
+
+.tree-placeholder,
+.tree-loading,
+.tree-error {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 1.5rem;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  gap: 1rem;
+}
+
+.tree-placeholder svg,
+.tree-loading .spinner,
+.tree-error svg {
+  margin-bottom: 0.5rem;
+}
+
+.tree-placeholder svg,
+.tree-error svg {
+  opacity: 0.5;
+  color: var(--text-secondary);
+}
+
+.tree-error svg {
+  color: #ef4444;
+  opacity: 0.8;
+}
+
+.tree-error {
+  color: #fca5a5;
+}
+
+.tree-actions {
+  position: relative;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+}
+
+.tree-search-input {
+  width: 100%;
+  background: #18181b;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 0.5rem 2rem 0.5rem 0.75rem;
+  color: var(--text-primary);
+  font-size: 0.85rem;
+  transition: all 0.2s;
+  box-sizing: border-box;
+}
+
+.tree-search-input:focus {
+  outline: none;
+  border-color: var(--accent-color);
+}
+
+.tree-search-clear {
+  position: absolute;
+  right: 0.5rem;
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 1.1rem;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tree-search-clear:hover {
+  color: var(--text-primary);
+}
+
+.tree-container {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 0.25rem;
+  text-align: left;
+}
+
+.tree-node-wrapper {
+  margin-bottom: 0.15rem;
+}
+
+.tree-node-item {
+  display: flex;
+  align-items: center;
+  padding: 0.25rem 0.4rem;
+  border-radius: 6px;
+  cursor: default;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.tree-node-item:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.tree-expander {
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  margin-right: 0.2rem;
+  transition: all 0.2s;
+}
+
+.tree-expander:hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.chevron-icon {
+  transition: transform 0.2s ease;
+  transform: rotate(0deg);
+}
+
+.chevron-icon.expanded {
+  transform: rotate(90deg);
+}
+
+.tree-leaf-indent {
+  width: 20px;
+  height: 20px;
+  margin-right: 0.2rem;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.tree-checkbox {
+  margin: 0 0.5rem 0 0;
+  cursor: pointer;
+  accent-color: var(--accent-color);
+  width: 14px;
+  height: 14px;
+}
+
+.tree-node-icon {
+  margin-right: 0.4rem;
+  display: flex;
+  align-items: center;
+  font-size: 1rem;
+}
+
+.folder-icon {
+  color: #eab308; /* warm gold */
+}
+
+.file-icon {
+  color: var(--text-secondary);
+}
+
+.tree-node-name {
+  font-size: 0.85rem;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-family: 'Inter', sans-serif;
 }
