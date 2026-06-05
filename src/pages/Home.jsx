@@ -29,6 +29,7 @@ function Home() {
             target="_blank"
             rel="noopener noreferrer"
             className="btn btn-secondary"
+            aria-label="View documentation on GitHub"
           >
             <svg
               width="20"
@@ -51,6 +52,7 @@ function Home() {
             href="https://github.com/abhro05"
             target="_blank"
             rel="noopener noreferrer"
+            aria-label="Visit maintainer's GitHub profile"
           >
             abhro05
           </a>{" "}
