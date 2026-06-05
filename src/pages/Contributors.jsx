@@ -70,17 +70,34 @@ const Contributors = () => {
           }
         }
 
-        const response = await fetch(
-          "https://api.github.com/repos/abhro05/AutoDoc.ai/contributors",
-        );
-        if (!response.ok) {
-          throw new Error("Failed to fetch");
+        let page = 1;
+        let allContributors = [];
+        let done = false;
+        const maxPages = 5; // Safety cap to avoid infinite loops and rate limiting
+
+        while (!done && page <= maxPages) {
+          const response = await fetch(
+            `https://api.github.com/repos/abhro05/AutoDoc.ai/contributors?per_page=100&page=${page}`
+          );
+          if (!response.ok) {
+            throw new Error(`Failed to fetch page ${page}`);
+          }
+          const data = await response.json();
+          if (Array.isArray(data) && data.length > 0) {
+            allContributors = [...allContributors, ...data];
+            if (data.length < 100) {
+              done = true;
+            } else {
+              page++;
+            }
+          } else {
+            done = true;
+          }
         }
 
-        const data = await response.json();
-        if (Array.isArray(data) && data.length > 0) {
-          setContributors(data);
-          localStorage.setItem("github_contributors", JSON.stringify(data));
+        if (allContributors.length > 0) {
+          setContributors(allContributors);
+          localStorage.setItem("github_contributors", JSON.stringify(allContributors));
           localStorage.setItem("github_contributors_time", now.toString());
         }
       } catch (error) {
