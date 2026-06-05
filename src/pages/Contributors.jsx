@@ -133,6 +133,7 @@ const Contributors = () => {
               target="_blank"
               rel="noopener noreferrer"
               className="github-btn"
+              aria-label={`View GitHub profile of ${contributor.login}`}
             >
               <svg
                 height="20"

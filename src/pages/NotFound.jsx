@@ -27,6 +27,7 @@ const NotFound = () => {
             href="https://github.com/abhro05"
             target="_blank"
             rel="noopener noreferrer"
+            aria-label="Visit maintainer's GitHub profile"
           >
             abhro05
           </a>{" "}
