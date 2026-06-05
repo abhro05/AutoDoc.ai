@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Authorize AutoDoc.ai</title>
+  <link href="https://fonts.googleapis.com/css2family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background-color: #0d1117;
+      color: #c9d1d9;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .auth-container {
+      background-color: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 12px;
+      max-width: 500px;
+      width: 90%;
+      padding: 2.5rem;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+      text-align: center;
+      box-sizing: border-box;
+    }
+    .logos-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .logo-box {
+      width: 60px;
+      height: 60px;
+      background-color: #21262d;
+      border: 1px solid #30363d;
+      border-radius: 12px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.8rem;
+    }
+    .logo-autodoc {
+      color: #22c55e;
+      font-weight: 700;
+    }
+    .logo-github {
+      color: #ffffff;
+    }
+    .logo-connection {
+      color: #8b949e;
+      font-size: 1.5rem;
+      animation: pulse 1.5s infinite ease-in-out;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 0.4; }
+      50% { opacity: 1; }
+    }
+    h2 {
+      color: #f0f6fc;
+      margin-top: 0;
+      margin-bottom: 0.5rem;
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+    .subtitle {
+      color: #8b949e;
+      font-size: 0.95rem;
+      margin-bottom: 2rem;
+      line-height: 1.5;
+    }
+    .permissions-list {
+      background-color: #0d1117;
+      border: 1px solid #30363d;
+      border-radius: 8px;
+      padding: 1.25rem 1.5rem;
+      text-align: left;
+      margin-bottom: 2rem;
+    }
+    .permission-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+      font-size: 0.9rem;
+    }
+    .permission-item:last-child {
+      margin-bottom: 0;
+    }
+    .permission-icon {
+      color: #22c55e;
+      margin-top: 0.15rem;
+      font-weight: bold;
+    }
+    .buttons-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.2s;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .btn-primary {
+      background-color: #238636;
+      color: #ffffff;
+    }
+    .btn-primary:hover {
+      background-color: #2ea44f;
+    }
+    .btn-secondary {
+      background-color: #21262d;
+      color: #c9d1d9;
+      border-color: #30363d;
+    }
+    .btn-secondary:hover {
+      background-color: #30363d;
+      border-color: #8b949e;
+    }
+    .footer-text {
+      color: #8b949e;
+      font-size: 0.75rem;
+      margin-top: 1.5rem;
+      line-height: 1.4;
+    }
+    .footer-text a {
+      color: #58a6ff;
+      text-decoration: none;
+    }
+    .footer-text a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="auth-container">
+    <div class="logos-wrapper">
+      <div class="logo-box logo-autodoc">AD</div>
+      <div class="logo-connection">⚡</div>
+      <div class="logo-box logo-github">
+        <svg height="32" width="32" viewBox="0 0 16 16" fill="currentColor">
+          <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.86 2.33.66.07-.52.28-.86.51-1.06-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.13 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.03 2.2-.82 2.2-.82.44 1.11.16 1.93.08 2.13.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path>
+        </svg>
+      </div>
+    </div>
+    <h2>Authorize AutoDoc.ai</h2>
+    <p class="subtitle">AutoDoc.ai is requesting permission to access your public repositories and publish files on your behalf.</p>
+    
+    <div class="permissions-list">
+      <div class="permission-item">
+        <span class="permission-icon">✓</span>
+        <span>Read public repositories, branches, and directory trees</span>
+      </div>
+      <div class="permission-item">
+        <span class="permission-icon">✓</span>
+        <span>Write files, create branches, and push commits</span>
+      </div>
+    </div>
+
+    <div class="buttons-group">
+      <button class="btn btn-primary" onclick="authorize()">Authorize MayurKharat0390</button>
+      <button class="btn btn-secondary" onclick="cancel()">Cancel</button>
+    </div>
+
+    <div class="footer-text">
+      You are being redirected to authorize this application. 
+      Read the <a href="#">AutoDoc.ai Privacy Policy</a> for more details.
+    </div>
+  </div>
+
+  <script>
+    function authorize() {
+      // Send message to parent window with mock token
+      if (window.opener) {
+        window.opener.postMessage({ 
+          type: "oauth-success", 
+          token: "mock_github_oauth_token_" + Math.random().toString(36).substring(2, 15) 
+        }, "*");
+      }
+      window.close();
+    }
+
+    function cancel() {
+      if (window.opener) {
+        window.opener.postMessage({ type: "oauth-cancelled" }, "*");
+      }
+      window.close();
+    }
+  </script>
+</body>
+</html>
