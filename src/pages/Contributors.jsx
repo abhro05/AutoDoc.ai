@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, NavLink } from "react-router-dom";
 import "../styles/Contributors.css";
 import Navbar from "../components/Navbar";
+import { useOnlineStatus } from "../hooks/useOnlineStatus";
 
 const fallbackContributors = [
   {
@@ -43,8 +44,27 @@ const fallbackContributors = [
 
 const Contributors = () => {
   const [contributors, setContributors] = useState(fallbackContributors);
+  const isOnline = useOnlineStatus();
+  const [offlineNotice, setOfflineNotice] = useState(!navigator.onLine);
 
   useEffect(() => {
+    if (!isOnline) {
+      setOfflineNotice(true);
+      const cachedData = localStorage.getItem("github_contributors");
+      if (cachedData) {
+        try {
+          const parsedData = JSON.parse(cachedData);
+          if (Array.isArray(parsedData) && parsedData.length > 0) {
+            setContributors(parsedData);
+          }
+        } catch (parseErr) {
+          console.error("Failed to parse cached contributors:", parseErr);
+        }
+      }
+      return;
+    }
+
+    setOfflineNotice(false);
     const fetchContributors = async () => {
       try {
         const cachedData = localStorage.getItem("github_contributors");
@@ -106,7 +126,7 @@ const Contributors = () => {
     };
 
     fetchContributors();
-  }, []);
+  }, [isOnline]);
 
   return (
     <div className="contributors-page">
@@ -118,6 +138,54 @@ const Contributors = () => {
           We thank the open‑source community for their amazing work.
         </p>
       </header>
+
+      {offlineNotice && (
+        <div className="offline-notice" role="alert">
+          <div className="offline-notice-content">
+            <svg
+              className="offline-notice-icon"
+              stroke="currentColor"
+              fill="none"
+              strokeWidth="2"
+              viewBox="0 0 24 24"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              height="1.2em"
+              width="1.2em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <line x1="1" y1="1" x2="23" y2="23"></line>
+              <path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55"></path>
+              <path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39"></path>
+              <path d="M10.71 5.05A16 16 0 0 1 22.58 9"></path>
+              <path d="M1.42 9a15.91 15.91 0 0 1 4.7-2.88"></path>
+              <path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path>
+              <line x1="12" y1="20" x2="12.01" y2="20"></line>
+            </svg>
+            <span>You are viewing cached contributor data because your browser is currently offline.</span>
+          </div>
+          <button
+            onClick={() => setOfflineNotice(false)}
+            className="offline-notice-close"
+            aria-label="Dismiss notice"
+          >
+            <svg
+              stroke="currentColor"
+              fill="none"
+              strokeWidth="2"
+              viewBox="0 0 24 24"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              height="1em"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+      )}
 
       <section className="grid">
         {contributors.map((contributor) => (
