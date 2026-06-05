@@ -41,14 +41,37 @@ const fallbackContributors = [
   },
 ];
 
+const getRepositoryTarget = () => {
+  try {
+    const hostname = window.location.hostname.toLowerCase();
+    const pathname = window.location.pathname;
+
+    if (hostname.endsWith(".github.io")) {
+      const username = hostname.replace(".github.io", "");
+      const pathSegments = pathname.split("/").filter(Boolean);
+      if (pathSegments.length > 0) {
+        const repoName = pathSegments[0];
+        return `${username}/${repoName}`;
+      }
+    }
+  } catch (e) {
+    console.error("Failed to parse repository target from window location:", e);
+  }
+  return "abhro05/AutoDoc.ai";
+};
+
 const Contributors = () => {
   const [contributors, setContributors] = useState(fallbackContributors);
 
   useEffect(() => {
     const fetchContributors = async () => {
+      const repo = getRepositoryTarget();
+      const cacheKey = `github_contributors_${repo.replace("/", "_")}`;
+      const cacheTimeKey = `github_contributors_time_${repo.replace("/", "_")}`;
+
       try {
-        const cachedData = localStorage.getItem("github_contributors");
-        const cachedTime = localStorage.getItem("github_contributors_time");
+        const cachedData = localStorage.getItem(cacheKey);
+        const cachedTime = localStorage.getItem(cacheTimeKey);
         const now = Date.now();
 
         if (
@@ -71,7 +94,7 @@ const Contributors = () => {
         }
 
         const response = await fetch(
-          "https://api.github.com/repos/abhro05/AutoDoc.ai/contributors",
+          `https://api.github.com/repos/${repo}/contributors`,
         );
         if (!response.ok) {
           throw new Error("Failed to fetch");
@@ -80,15 +103,15 @@ const Contributors = () => {
         const data = await response.json();
         if (Array.isArray(data) && data.length > 0) {
           setContributors(data);
-          localStorage.setItem("github_contributors", JSON.stringify(data));
-          localStorage.setItem("github_contributors_time", now.toString());
+          localStorage.setItem(cacheKey, JSON.stringify(data));
+          localStorage.setItem(cacheTimeKey, now.toString());
         }
       } catch (error) {
         console.error(
           "Error fetching contributors, falling back to cache if available:",
           error,
         );
-        const cachedData = localStorage.getItem("github_contributors");
+        const cachedData = localStorage.getItem(cacheKey);
         if (cachedData) {
           try {
             const parsedData = JSON.parse(cachedData);
