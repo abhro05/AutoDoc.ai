@@ -18,9 +18,13 @@ app.use(cookieParser());
 
 // Import routes
 import authRoutes from './routes/auth.js';
+import userRoutes from './routes/user.js';
+import generationRoutes from './routes/generations.js';
 
 // Use routes
 app.use('/api/auth', authRoutes);
+app.use('/api/user', userRoutes);
+app.use('/api/generations', generationRoutes);
 
 // Test route
 app.get('/', (req, res) => {

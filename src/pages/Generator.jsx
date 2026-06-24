@@ -1,6 +1,9 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
+import axios from "axios";
 import "../styles/Generator.css";
 import Navbar from "../components/Navbar";
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
 
 const parseGitHubUrl = (url) => {
   const trimmed = url.trim();
@@ -75,6 +78,27 @@ const Generator = () => {
   const [jobMessage, setJobMessage] = useState('');
   const [jobProgress, setJobProgress] = useState({ filesProcessed: 0, totalFiles: 0 });
   const eventSourceRef = useRef(null);
+
+  const savedGenRef = useRef(false);
+
+  const saveGeneration = useCallback(async (markdown) => {
+    const trimmed = repoUrl.trim();
+    if (!trimmed || !markdown) return;
+    savedGenRef.current = true;
+    try {
+      const parsed = parseGitHubUrl(trimmed);
+      await axios.post(`${API_BASE_URL}/api/generations`, {
+        repoUrl: trimmed,
+        repoOwner: parsed.isValid ? parsed.owner : '',
+        repoName: parsed.isValid ? parsed.repo : '',
+        customInstructions,
+        markdown,
+        status: 'completed',
+      });
+    } catch {
+      /* silent */
+    }
+  }, [repoUrl, customInstructions]);
 
   // Cleanup SSE on unmount
   useEffect(() => {
@@ -173,11 +197,15 @@ const Generator = () => {
         }
 
         if (data.status === "completed") {
-          setMarkdownOutput(data.markdown || '');
+          const md = data.markdown || '';
+          setMarkdownOutput(md);
           setIsGenerating(false);
           setJobPhase('completed');
           setJobMessage('Documentation generated successfully!');
           es.close();
+          if (!savedGenRef.current && md) {
+            saveGeneration(md);
+          }
         } else if (data.status === "failed") {
           setError(data.error || data.message || "Generation failed.");
           setIsGenerating(false);
@@ -263,12 +291,13 @@ const Generator = () => {
       }
 
       if (data.jobId) {
+        savedGenRef.current = false;
         connectToJobStatus(data.jobId);
       } else if (data.markdown) {
-        // Synchronous fallback
         setMarkdownOutput(data.markdown);
         setIsGenerating(false);
         setJobPhase('completed');
+        saveGeneration(data.markdown);
       }
     } catch (e) {
       setError(e.message);
@@ -287,6 +316,7 @@ const Generator = () => {
     setJobMessage('');
     setJobProgress({ filesProcessed: 0, totalFiles: 0 });
     setError('');
+    savedGenRef.current = false;
     if (eventSourceRef.current) {
       eventSourceRef.current.close();
     }

@@ -10,6 +10,8 @@ import Generator from './pages/Generator';
 import Contributors from './pages/Contributors';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
+import Profile from './pages/Profile';
+import Dashboard from './pages/Dashboard';
 import NotFound from './pages/NotFound';
 
 function App() {
@@ -39,6 +41,16 @@ function App() {
         <Route path="/contributors" element={
           <ProtectedRoute>
             <Contributors />
+          </ProtectedRoute>
+        } />
+        <Route path="/profile" element={
+          <ProtectedRoute>
+            <Profile />
+          </ProtectedRoute>
+        } />
+        <Route path="/dashboard" element={
+          <ProtectedRoute>
+            <Dashboard />
           </ProtectedRoute>
         } />
 
