@@ -7,7 +7,8 @@ import helmetMiddleware from './config/helmet.js';
 dotenv.config();
 
 const app = express();
-
+import { validateEnv } from './config/envValidator.js';
+validateEnv();
 // Middleware
 app.use(helmetMiddleware);
 app.use(cors({
