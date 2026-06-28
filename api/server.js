@@ -7,7 +7,8 @@ import cookieParser from 'cookie-parser';
 dotenv.config();
 
 const app = express();
-
+import { validateEnv } from './config/envValidator.js';
+validateEnv();
 // Middleware
 app.use(cors({
   origin: 'http://localhost:3000',
