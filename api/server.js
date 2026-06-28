@@ -3,12 +3,13 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
-
+import helmetMiddleware from './config/helmet.js';
 dotenv.config();
 
 const app = express();
 
 // Middleware
+app.use(helmetMiddleware);
 app.use(cors({
   origin: 'http://localhost:3000',
   credentials: true
