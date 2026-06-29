@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 import { getRegisterValidationMessage } from "../utils/authValidation.js";
 import { getSupabaseAdmin } from "../utils/supabaseAdmin.js";
+import { normalizeEmail } from "../utils/normalizeEmail.js";
 
 // ========== REGISTER ==========
 export const register = async (req, res) => {
@@ -19,7 +20,7 @@ export const register = async (req, res) => {
       return res.status(500).json({ message: "Unable to create an account right now." });
     }
 
-    const normalizedEmail = email.trim().toLowerCase();
+    const normalizedEmail = normalizeEmail(email);
 
     const existingUser = await User.findOne({ email: normalizedEmail });
     if (existingUser) {
@@ -70,7 +71,7 @@ export const login = async (req, res) => {
         message: "Email and password are required",
       });
     }
-    const normalizedEmail = email.trim().toLowerCase()
+    const normalizedEmail = normalizeEmail(email);
 
     const user = await User.findOne({ email: normalizedEmail });
     if (!user || !user.password) {
@@ -119,7 +120,8 @@ export const supabaseLogin = async (req, res) => {
       return res.status(401).json({ message: "Invalid or expired access token" });
     }
 
-    const email = supabaseUser.email;
+    const normalizedEmail = normalizeEmail(supabaseUser?.email);
+    const email = normalizedEmail;
     const userMeta = supabaseUser.user_metadata || {};
     const provider = supabaseUser.app_metadata?.provider || 'email';
     const name = userMeta.full_name || userMeta.name || email?.split('@')[0] || 'User';
@@ -128,7 +130,7 @@ export const supabaseLogin = async (req, res) => {
     let user = await User.findOne({
       $or: [
         { supabaseId: supabaseUser.id },
-        { email: email?.toLowerCase() },
+        { email: normalizedEmail },
       ],
     });
 
@@ -142,7 +144,7 @@ export const supabaseLogin = async (req, res) => {
     } else {
       user = new User({
         name,
-        email: email?.toLowerCase(),
+        email: normalizedEmail,
         password: null,
         supabaseId: supabaseUser.id,
         avatarUrl,
