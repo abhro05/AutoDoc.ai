@@ -20,6 +20,6 @@ router.post("/register", registerLimiter, catchAsync(register));
 router.post("/login", loginLimiter, catchAsync(login));
 
 // ========== SUPABASE OAUTH ==========
-router.post("/supabase", catchAsync(supabaseLogin));
+router.post("/supabase", loginLimiter, catchAsync(supabaseLogin));
 
 export default router;

@@ -23,6 +23,10 @@ app.use(cookieParser());
 import requestLogger from './middleware/logger.js';
 app.use(requestLogger);
 
+// ========== RATE LIMITING MIDDLEWARE ==========
+import { generalLimiter } from './middleware/rateLimiter.js';
+app.use(generalLimiter);
+
 // ========== IMPORT ROUTES ==========
 import authRoutes from './routes/auth.js';
 
@@ -40,14 +44,10 @@ mongoose.connect(process.env.MONGO_URI)
   .catch(err => console.log('MongoDB Error:', err));
 
 // ========== ERROR HANDLING MIDDLEWARE ==========
-// Import error handlers
 import { errorHandler } from './middleware/errorHandler.js';
 import notFound from './middleware/notFound.js';
 
-// 404 handler - MUST be after all routes
 app.use(notFound);
-
-// Global error handler - MUST be last
 app.use(errorHandler);
 
 // ========== START SERVER ==========
