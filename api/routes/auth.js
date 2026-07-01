@@ -8,20 +8,18 @@ import User from "../models/User.js";
 import { getRegisterValidationMessage } from "../utils/authValidation.js";
 import { getSupabaseAdmin } from "../utils/supabaseAdmin.js";
 import { loginLimiter, registerLimiter, forgotPasswordLimiter, resetPasswordLimiter } from "../middleware/rateLimiter.js";
-import { register,login , supabaseLogin} from "../controllers/authController.js"
+import { register, login, supabaseLogin } from "../controllers/authController.js";
+import { catchAsync } from "../middleware/errorHandler.js";
 
 const router = express.Router();
 
-// ================= RATE LIMITERS =================
-
-
 // ========== REGISTER ==========
-router.post("/register", registerLimiter,register);
+router.post("/register", registerLimiter, catchAsync(register));
 
 // ========== LOGIN ==========
-router.post("/login", loginLimiter,login);
+router.post("/login", loginLimiter, catchAsync(login));
 
 // ========== SUPABASE OAUTH ==========
-router.post("/supabase",supabaseLogin);
+router.post("/supabase", catchAsync(supabaseLogin));
 
 export default router;

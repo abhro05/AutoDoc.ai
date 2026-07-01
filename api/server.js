@@ -19,33 +19,6 @@ app.use(cors({
 app.use(express.json());
 app.use(cookieParser());
 
-// ========== HEALTH CHECK ENDPOINT ==========
-app.get('/health', (req, res) => {
-  const healthCheck = {
-    status: 'OK',
-    uptime: process.uptime(),
-    timestamp: new Date().toISOString(),
-    server: {
-      port: process.env.PORT || 5000,
-      environment: process.env.NODE_ENV || 'development',
-    },
-    database: {
-      status: mongoose.connection.readyState === 1 ? 'Connected' : 'Disconnected',
-      name: mongoose.connection.name || 'Not connected',
-    },
-    memory: {
-      usage: process.memoryUsage(),
-    },
-  };
-
-  if (mongoose.connection.readyState !== 1) {
-    healthCheck.status = 'Degraded';
-    return res.status(503).json(healthCheck);
-  }
-
-  res.status(200).json(healthCheck);
-});
-
 // ========== IMPORT ROUTES ==========
 import authRoutes from './routes/auth.js';
 
@@ -61,6 +34,17 @@ app.get('/', (req, res) => {
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('MongoDB Connected'))
   .catch(err => console.log('MongoDB Error:', err));
+
+// ========== ERROR HANDLING MIDDLEWARE ==========
+// Import error handlers
+import { errorHandler } from './middleware/errorHandler.js';
+import notFound from './middleware/notFound.js';
+
+// 404 handler - MUST be after all routes
+app.use(notFound);
+
+// Global error handler - MUST be last
+app.use(errorHandler);
 
 // ========== START SERVER ==========
 const PORT = process.env.PORT || 5000;
