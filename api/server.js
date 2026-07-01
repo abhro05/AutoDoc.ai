@@ -19,6 +19,10 @@ app.use(cors({
 app.use(express.json());
 app.use(cookieParser());
 
+// ========== REQUEST LOGGING MIDDLEWARE ==========
+import requestLogger from './middleware/logger.js';
+app.use(requestLogger);
+
 // ========== IMPORT ROUTES ==========
 import authRoutes from './routes/auth.js';
 
