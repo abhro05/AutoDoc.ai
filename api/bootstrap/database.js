@@ -1,12 +1,13 @@
 // src/bootstrap/database.js
 import mongoose from "mongoose";
+import logger from '../utils/logger.js';
 
 export const initializeDatabase = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URI);
-    console.log("✅ MongoDB Connected successfully");
+    logger.info("✅ MongoDB Connected successfully");
   } catch (err) {
-    console.error("❌ MongoDB Connection Error:", err);
+    logger.error("❌ MongoDB Connection Error:", err);
     process.exit(1); // अगर कनेक्शन फेल होता है, तो सर्वर बंद कर दें
   }
 };

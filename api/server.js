@@ -2,25 +2,25 @@
 import dotenv from "dotenv";
 import app from "./app.js"; // 🟢 यहाँ नई app.js को इम्पोर्ट करें
 import { initializeDatabase } from "./bootstrap/database.js";
-
+import logger from "./utils/logger.js";
 dotenv.config();
 
 const PORT = process.env.PORT || 5000;
 
 const startServer = async () => {
   try {
-    console.log("🚀 Initializing Database connection...");
+    logger.info("🚀 Initializing Database connection...");
     await initializeDatabase(); // डेटाबेस कनेक्ट करें
 
     const server = app.listen(PORT, () => {
-      console.log(`✅ Server running on port ${PORT}`);
+      logger.info(`✅ Server running on port ${PORT}`);
     });
 
     // Graceful Shutdown (Ctrl+C दबाने पर सुरक्षित बंद होना)
     const shutdown = (signal) => {
-      console.log(`\n🛑 Received ${signal}. Shutting down gracefully...`);
+      logger.info(`\n🛑 Received ${signal}. Shutting down gracefully...`);
       server.close(() => {
-        console.log("🔌 Server closed.");
+        logger.info("🔌 Server closed.");
         process.exit(0);
       });
     };
@@ -30,12 +30,12 @@ const startServer = async () => {
 
     return server;
   } catch (error) {
-    console.error("❌ Server startup failed:", error.message);
+    logger.error("❌ Server startup failed:", error.message);
     process.exit(1);
   }
 };
 
 startServer().catch((err) => {
-  console.error(`💥 Fatal error during startup: ${err.message}`);
+  logger.error(`💥 Fatal error during startup: ${err.message}`);
   process.exit(1);
 });
