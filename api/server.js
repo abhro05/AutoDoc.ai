@@ -12,7 +12,7 @@ import { errorHandler } from "./middleware/errorHandler.js";
 import notFound from "./middleware/notFound.js";
 
 import authRoutes from "./routes/auth.js";
-
+import healthRoutes  from "./routes/health.js"
 dotenv.config();
 
 validateEnv();
@@ -37,7 +37,7 @@ app.use(logger);
 
 // ========== ROUTES ==========
 app.use("/api/auth", authRoutes);
-
+app.use("/health",healthRoutes)
 // ========== TEST ROUTE ==========
 app.get("/", (req, res) => {
   res.send("API is running...");
