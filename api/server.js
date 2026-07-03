@@ -6,12 +6,11 @@ import cookieParser from "cookie-parser";
 
 import helmetMiddleware from "./config/helmet.js";
 import { validateEnv } from "./config/envValidator.js";
-
-import logger from "./middleware/logger.js";
 import { errorHandler } from "./middleware/errorHandler.js";
 import notFound from "./middleware/notFound.js";
 
 import authRoutes from "./routes/auth.js";
+import { globalLimiter } from "./middleware/rateLimiter.js";
 
 dotenv.config();
 
@@ -29,11 +28,11 @@ app.use(
   })
 );
 
+// Global Rate Limiter
+app.use(globalLimiter);
+
 app.use(express.json());
 app.use(cookieParser());
-
-// Centralized Request Logger
-app.use(logger);
 
 // ========== ROUTES ==========
 app.use("/api/auth", authRoutes);
@@ -49,7 +48,7 @@ app.use(notFound);
 // ========== GLOBAL ERROR HANDLER ==========
 app.use(errorHandler);
 
-// ========== DATABASE ==========
+// ========== MONGODB CONNECTION ==========
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB Connected"))
