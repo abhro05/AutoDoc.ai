@@ -12,6 +12,7 @@ import { errorHandler } from "./middleware/errorHandler.js";
 import notFound from "./middleware/notFound.js";
 
 import authRoutes from "./routes/auth.js";
+import { initializeDatabase } from "./bootstrap/database.js";
 
 dotenv.config();
 
@@ -50,11 +51,7 @@ app.use(notFound);
 app.use(errorHandler);
 
 // ========== DATABASE ==========
-mongoose
-  .connect(process.env.MONGO_URI)
-  .then(() => console.log("MongoDB Connected"))
-  .catch((err) => console.log("MongoDB Error:", err));
-
+initializeDatabase();
 // ========== START SERVER ==========
 const PORT = process.env.PORT || 5000;
 
