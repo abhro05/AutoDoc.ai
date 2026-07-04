@@ -6,19 +6,19 @@ import cookieParser from "cookie-parser";
 
 import helmetMiddleware from "./config/helmet.js";
 import { validateEnv } from "./config/envValidator.js";
+
+import authRoutes from "./routes/auth.js";
 import { errorHandler } from "./middleware/errorHandler.js";
 import notFound from "./middleware/notFound.js";
 
-import authRoutes from "./routes/auth.js";
-import { globalLimiter } from "./middleware/rateLimiter.js";
-
 dotenv.config();
 
+// ================= VALIDATE ENVIRONMENT =================
 validateEnv();
 
 const app = express();
 
-// ========== MIDDLEWARE ==========
+// ================= MIDDLEWARE =================
 app.use(helmetMiddleware);
 
 app.use(
@@ -28,33 +28,30 @@ app.use(
   })
 );
 
-// Global Rate Limiter
-app.use(globalLimiter);
-
 app.use(express.json());
 app.use(cookieParser());
 
-// ========== ROUTES ==========
+// ================= ROUTES =================
 app.use("/api/auth", authRoutes);
 
-// ========== TEST ROUTE ==========
+// ================= TEST ROUTE =================
 app.get("/", (req, res) => {
   res.send("API is running...");
 });
 
-// ========== 404 HANDLER ==========
+// ================= 404 HANDLER =================
 app.use(notFound);
 
-// ========== GLOBAL ERROR HANDLER ==========
+// ================= GLOBAL ERROR HANDLER =================
 app.use(errorHandler);
 
-// ========== MONGODB CONNECTION ==========
+// ================= MONGODB CONNECTION =================
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB Connected"))
-  .catch((err) => console.log("MongoDB Error:", err));
+  .catch((err) => console.error("MongoDB Error:", err));
 
-// ========== START SERVER ==========
+// ================= START SERVER =================
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
