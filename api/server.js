@@ -6,8 +6,6 @@ import cookieParser from "cookie-parser";
 
 import helmetMiddleware from "./config/helmet.js";
 import { validateEnv } from "./config/envValidator.js";
-
-import logger from "./middleware/logger.js";
 import { errorHandler } from "./middleware/errorHandler.js";
 import notFound from "./middleware/notFound.js";
 
@@ -30,11 +28,11 @@ app.use(
   })
 );
 
+// Global Rate Limiter
+app.use(globalLimiter);
+
 app.use(express.json());
 app.use(cookieParser());
-
-// Centralized Request Logger
-app.use(logger);
 
 // ========== ROUTES ==========
 app.use("/api/auth", authRoutes);
