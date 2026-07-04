@@ -8,6 +8,8 @@ import helmetMiddleware from "./config/helmet.js";
 import { validateEnv } from "./config/envValidator.js";
 
 import authRoutes from "./routes/auth.js";
+import healthRoutes  from "./routes/health.js"
+import { globalLimiter } from "./middleware/rateLimiter.js";
 import { errorHandler } from "./middleware/errorHandler.js";
 import notFound from "./middleware/notFound.js";
 
@@ -33,8 +35,8 @@ app.use(cookieParser());
 
 // ================= ROUTES =================
 app.use("/api/auth", authRoutes);
-
-// ================= TEST ROUTE =================
+app.use("/health",healthRoutes)
+// ========== TEST ROUTE ==========
 app.get("/", (req, res) => {
   res.send("API is running...");
 });
