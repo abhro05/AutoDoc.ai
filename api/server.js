@@ -68,7 +68,6 @@ const startServer = async () => {
     const server = app.listen(PORT, () => {
       logger.info(`✅ Server running on port ${PORT}`);
     });
-
     
     const shutdown = (signal) => {
       logger.info(`\n🛑 Received ${signal}. Shutting down gracefully...`);
