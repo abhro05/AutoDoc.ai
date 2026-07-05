@@ -2,28 +2,26 @@
 import dotenv from "dotenv";
 import app from "./app.js"; 
 import { initializeDatabase } from "./bootstrap/database.js";
-
+import logger from "./utils/logger.js";
 dotenv.config();
 
 import cookieParser from "cookie-parser";
 
 import helmetMiddleware from "./config/helmet.js";
 import { validateEnv } from "./config/envValidator.js";
-
-import authRoutes from "./routes/auth.js";
-import healthRoutes  from "./routes/health.js"
-import { globalLimiter } from "./middleware/rateLimiter.js";
 import { errorHandler } from "./middleware/errorHandler.js";
 import notFound from "./middleware/notFound.js";
 
+import authRoutes from "./routes/auth.js";
+import { globalLimiter } from "./middleware/rateLimiter.js";
+
 dotenv.config();
 
-// ================= VALIDATE ENVIRONMENT =================
 validateEnv();
 
 const app = express();
 
-// ================= MIDDLEWARE =================
+// ========== MIDDLEWARE ==========
 app.use(helmetMiddleware);
 
 app.use(
@@ -33,46 +31,48 @@ app.use(
   })
 );
 
+// Global Rate Limiter
+app.use(globalLimiter);
+
 app.use(express.json());
 app.use(cookieParser());
 
-// ================= ROUTES =================
+// ========== ROUTES ==========
 app.use("/api/auth", authRoutes);
-app.use("/health",healthRoutes)
+
 // ========== TEST ROUTE ==========
 app.get("/", (req, res) => {
   res.send("API is running...");
 });
 
-// ================= 404 HANDLER =================
+// ========== 404 HANDLER ==========
 app.use(notFound);
 
-// ================= GLOBAL ERROR HANDLER =================
+// ========== GLOBAL ERROR HANDLER ==========
 app.use(errorHandler);
 
-// ================= MONGODB CONNECTION =================
+// ========== MONGODB CONNECTION ==========
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB Connected"))
-  .catch((err) => console.error("MongoDB Error:", err));
+  .catch((err) => console.log("MongoDB Error:", err));
 
-// ================= START SERVER =================
+// ========== START SERVER ==========
 const PORT = process.env.PORT || 5000;
 
 const startServer = async () => {
   try {
-    console.log("🚀 Initializing Database connection...");
-    await initializeDatabase(); 
+    logger.info("🚀 Initializing Database connection...");
+    await initializeDatabase();
 
     const server = app.listen(PORT, () => {
-      console.log(`✅ Server running on port ${PORT}`);
+      logger.info(`✅ Server running on port ${PORT}`);
     });
-
-   
+    
     const shutdown = (signal) => {
-      console.log(`\n🛑 Received ${signal}. Shutting down gracefully...`);
+      logger.info(`\n🛑 Received ${signal}. Shutting down gracefully...`);
       server.close(() => {
-        console.log("🔌 Server closed.");
+        logger.info("🔌 Server closed.");
         process.exit(0);
       });
     };
@@ -82,12 +82,12 @@ const startServer = async () => {
 
     return server;
   } catch (error) {
-    console.error("❌ Server startup failed:", error.message);
+    logger.error("❌ Server startup failed:", error.message);
     process.exit(1);
   }
 };
 
 startServer().catch((err) => {
-  console.error(`💥 Fatal error during startup: ${err.message}`);
+  logger.error(`💥 Fatal error during startup: ${err.message}`);
   process.exit(1);
 });
