@@ -1,5 +1,7 @@
 // middleware/errorHandler.js
 
+import logger from "../utils/logger.js";
+
 /**
  * Custom error class for API errors
  */
@@ -45,7 +47,7 @@ const handleMongoError = (err) => {
  */
 const errorHandler = (err, req, res, next) => {
   // Log error for debugging
-  console.error('Error occurred:', {
+  logger.error('Error occurred:', {
     timestamp: new Date().toISOString(),
     path: req.path,
     method: req.method,

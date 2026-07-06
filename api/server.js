@@ -1,6 +1,6 @@
 // server.js
 import dotenv from "dotenv";
-import app from "./app.js"; // 🟢 यहाँ नई app.js को इम्पोर्ट करें
+import app from "./app.js"; 
 import { initializeDatabase } from "./bootstrap/database.js";
 
 dotenv.config();
@@ -10,13 +10,12 @@ const PORT = process.env.PORT || 5000;
 const startServer = async () => {
   try {
     console.log("🚀 Initializing Database connection...");
-    await initializeDatabase(); // डेटाबेस कनेक्ट करें
+    await initializeDatabase(); 
 
     const server = app.listen(PORT, () => {
       console.log(`✅ Server running on port ${PORT}`);
     });
-
-    // Graceful Shutdown (Ctrl+C दबाने पर सुरक्षित बंद होना)
+  
     const shutdown = (signal) => {
       console.log(`\n🛑 Received ${signal}. Shutting down gracefully...`);
       server.close(() => {

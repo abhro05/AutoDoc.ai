@@ -7,6 +7,6 @@ export const initializeDatabase = async () => {
     console.log("✅ MongoDB Connected successfully");
   } catch (err) {
     console.error("❌ MongoDB Connection Error:", err);
-    process.exit(1); // अगर कनेक्शन फेल होता है, तो सर्वर बंद कर दें
+    process.exit(1); 
   }
 };
