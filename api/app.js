@@ -1,5 +1,6 @@
 // app.js
 import express from "express";
+import cors from "cors";
 import cookieParser from "cookie-parser";
 import helmetMiddleware from "./config/helmet.js";
 import { validateEnv } from "./config/helmet.js";
@@ -8,17 +9,18 @@ import { errorHandler } from "./middleware/errorHandler.js";
 import notFound from "./middleware/notFound.js";
 import authRoutes from "./routes/auth.js";
 import dotenv from "dotenv";
-import corsMiddleware from "./config/cors.js";
-import registerMiddlewares from "./middleware/index.js";
 
 dotenv.config();
 validateEnv();
 
 const app = express();
 
-//  ========== REGISTER ALL MIDDLEWARES ==========
-registerMiddlewares(app)
-
+// ========== MIDDLEWARE ==========
+app.use(helmetMiddleware);
+app.use(cors({ origin: "http://localhost:3000", credentials: true }));
+app.use(express.json());
+app.use(cookieParser());
+app.use(logger);
 
 // ========== ROUTES ==========
 app.use("/api/auth", authRoutes);
