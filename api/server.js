@@ -9,8 +9,9 @@ import cookieParser from "cookie-parser";
 
 import helmetMiddleware from "./config/helmet.js";
 import { validateEnv } from "./config/envValidator.js";
-import { errorHandler } from "./middleware/errorHandler.js";
-import notFound from "./middleware/notFound.js";
+
+import authRoutes from "./routes/auth.js";
+import { initializeDatabase } from "./bootstrap/database.js";
 
 import authRoutes from "./routes/auth.js";
 import { globalLimiter } from "./middleware/rateLimiter.js";
@@ -51,12 +52,8 @@ app.use(notFound);
 // ========== GLOBAL ERROR HANDLER ==========
 app.use(errorHandler);
 
-// ========== MONGODB CONNECTION ==========
-mongoose
-  .connect(process.env.MONGO_URI)
-  .then(() => console.log("MongoDB Connected"))
-  .catch((err) => console.log("MongoDB Error:", err));
-
+// ========== DATABASE ==========
+initializeDatabase();
 // ========== START SERVER ==========
 const PORT = process.env.PORT || 5000;
 
