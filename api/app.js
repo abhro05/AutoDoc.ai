@@ -9,16 +9,18 @@ import notFound from "./middleware/notFound.js";
 import authRoutes from "./routes/auth.js";
 import dotenv from "dotenv";
 import corsMiddleware from "./config/cors.js";
-import registerMiddlewares from "./middleware/index.js";
 
 dotenv.config();
 validateEnv();
 
 const app = express();
 
-//  ========== REGISTER ALL MIDDLEWARES ==========
-registerMiddlewares(app)
-
+// ========== MIDDLEWARE ==========
+app.use(helmetMiddleware);
+app.use(corsMiddleware);
+app.use(express.json());
+app.use(cookieParser());
+app.use(logger);
 
 // ========== ROUTES ==========
 app.use("/api/auth", authRoutes);

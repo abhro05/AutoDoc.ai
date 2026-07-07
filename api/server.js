@@ -67,7 +67,7 @@ const startServer = async () => {
     await initializeDatabase();
 
     const server = app.listen(PORT, () => {
-      logger.info(`✅ Server running on port ${PORT}`);
+      console.log(`✅ Server running on port ${PORT}`);
     });
 
     // ==================== GRACEFUL SHUTDOWN  ====================
@@ -101,12 +101,12 @@ const startServer = async () => {
 
     return server;
   } catch (error) {
-    logger.error("❌ Server startup failed:", error.message);
+    console.error("❌ Server startup failed:", error.message);
     process.exit(1);
   }
 };
 
 startServer().catch((err) => {
-  logger.error(`💥 Fatal error during startup: ${err.message}`);
+  console.error(`💥 Fatal error during startup: ${err.message}`);
   process.exit(1);
 });
