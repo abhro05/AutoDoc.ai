@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import "../styles/Generator.css";
 import Navbar from "../components/Navbar";
+import useLocalStorage from '../utils/useLocalStorage';
 
 const parseGitHubUrl = (url) => {
   const trimmed = url.trim();
@@ -40,37 +41,14 @@ const Generator = () => {
     document.title = "Workspace | AutoDoc.ai";
   }, []);
 
-  const [repoUrl, setRepoUrl] = useState(() => {
-    try {
-      return localStorage.getItem("autodoc_repo_url") || "";
-    } catch (e) {
-      return "";
-    }
-  });
-  const [customInstructions, setCustomInstructions] = useState(() => {
-    try {
-      return localStorage.getItem("autodoc_custom_instructions") || "";
-    } catch (e) {
-      return "";
-    }
-  });
+  // --- REFACTORED STATE USING CUSTOM HOOK ---
+  const [repoUrl, setRepoUrl] = useLocalStorage("autodoc_repo_url", "");
+  const [customInstructions, setCustomInstructions] = useLocalStorage("autodoc_custom_instructions", "");
   const [isGenerating, setIsGenerating] = useState(false);
-  const [markdownOutput, setMarkdownOutput] = useState(() => {
-    try {
-      return localStorage.getItem("autodoc_markdown_output") || "";
-    } catch (e) {
-      return "";
-    }
-  });
-  const [versionHistory, setVersionHistory] = useState(() => {
-  try {
-    return JSON.parse(
-      localStorage.getItem("autodoc_version_history") || "[]"
-    );
-  } catch {
-    return [];
-  }
-});
+  const [markdownOutput, setMarkdownOutput] = useLocalStorage("autodoc_markdown_output", "");
+  const [versionHistory, setVersionHistory] = useLocalStorage("autodoc_version_history", []);
+  // ------------------------------------------
+
   const [activeTab, setActiveTab] = useState('code');
   const [copied, setCopied] = useState(false);
   const [downloaded, setDownloaded] = useState(false);
@@ -86,6 +64,7 @@ const Generator = () => {
   const eventSourceRef = useRef(null);
 
   const [previousMarkdown, setPreviousMarkdown] = useState("");
+  
   // Cleanup SSE on unmount
   useEffect(() => {
     return () => {
@@ -95,18 +74,6 @@ const Generator = () => {
     };
   }, []);
 
-
-  
-useEffect(() => {
-  try {
-    localStorage.setItem(
-      "autodoc_version_history",
-      JSON.stringify(versionHistory)
-    );
-  } catch (e) {
-    console.warn("Failed to save version history:", e);
-  }
-}, [versionHistory]);
   const handleUrlChange = (e) => {
     setRepoUrl(e.target.value);
     if (error) {
@@ -170,30 +137,24 @@ useEffect(() => {
         }
 
         if (data.status === "completed") {
+          if (previousMarkdown && data.markdown && previousMarkdown !== data.markdown) {
+            setVersionHistory((prev) => [
+              {
+                id: Date.now(),
+                timestamp: new Date().toISOString(),
+                repoUrl,
+                content: previousMarkdown,
+              },
+              ...prev,
+            ]);
+          }
 
-  if (
-  previousMarkdown &&
-  data.markdown &&
-  previousMarkdown !== data.markdown
-) {
-    setVersionHistory((prev) => [
-      {
-        id: Date.now(),
-        timestamp: new Date().toISOString(),
-        repoUrl,
-        content: previousMarkdown,
-      },
-      ...prev,
-    ]);
-  }
-
-  setMarkdownOutput(data.markdown || '');
-  setIsGenerating(false);
-  setJobPhase('completed');
-  setJobMessage('Documentation generated successfully!');
-  es.close();
-}
-else if (data.status === "failed") {
+          setMarkdownOutput(data.markdown || '');
+          setIsGenerating(false);
+          setJobPhase('completed');
+          setJobMessage('Documentation generated successfully!');
+          es.close();
+        } else if (data.status === "failed") {
           setError(data.error || data.message || "Generation failed.");
           setIsGenerating(false);
           setJobPhase('failed');
@@ -215,31 +176,7 @@ else if (data.status === "failed") {
     return () => {
       es.close();
     };
-  }, []);
-
-  useEffect(() => {
-    try {
-      localStorage.setItem("autodoc_repo_url", repoUrl);
-    } catch (e) {
-      console.warn("Failed to save repoUrl to localStorage:", e);
-    }
-  }, [repoUrl]);
-
-  useEffect(() => {
-    try {
-      localStorage.setItem("autodoc_custom_instructions", customInstructions);
-    } catch (e) {
-      console.warn("Failed to save customInstructions to localStorage:", e);
-    }
-  }, [customInstructions]);
-
-  useEffect(() => {
-    try {
-      localStorage.setItem("autodoc_markdown_output", markdownOutput);
-    } catch (e) {
-      console.warn("Failed to save markdownOutput to localStorage:", e);
-    }
-  }, [markdownOutput]);
+  }, [previousMarkdown, repoUrl, setMarkdownOutput, setVersionHistory]);
 
   const handleGenerate = async () => {
     const trimmedUrl = repoUrl.trim();
@@ -309,24 +246,20 @@ else if (data.status === "failed") {
         connectToJobStatus(data.jobId);
       } else if (data.markdown) {
         // Synchronous fallback
-        if (
-  previousMarkdown &&
-  previousMarkdown !== data.markdown
-) {
-  setVersionHistory((prev) => [
-    {
-      id: Date.now(),
-      timestamp: new Date().toISOString(),
-      repoUrl,
-      content: previousMarkdown,
-    },
-    ...prev,
-  ]);
-}
-
-setMarkdownOutput(data.markdown);
-setIsGenerating(false);
-setJobPhase('completed');
+        if (previousMarkdown && previousMarkdown !== data.markdown) {
+          setVersionHistory((prev) => [
+            {
+              id: Date.now(),
+              timestamp: new Date().toISOString(),
+              repoUrl,
+              content: previousMarkdown,
+            },
+            ...prev,
+          ]);
+        }
+        setMarkdownOutput(data.markdown);
+        setIsGenerating(false);
+        setJobPhase('completed');
       }
     } catch (e) {
       setError(e.message);
@@ -336,9 +269,11 @@ setJobPhase('completed');
       setTimeout(() => setShouldShake(false), 400);
     }
   };
-const restoreVersion = (version) => {
-  setMarkdownOutput(version.content);
-};
+
+  const restoreVersion = (version) => {
+    setMarkdownOutput(version.content);
+  };
+
   const handleClear = () => {
     setRepoUrl("");
     setCustomInstructions("");
@@ -621,25 +556,23 @@ const restoreVersion = (version) => {
             <div className="output-header-left">
               <h3>Generated Documentation</h3>
               {versionHistory.length > 0 && (
-  <div className="version-history-panel">
-    <h4>Version History</h4>
-
-    {versionHistory.slice(0, 5).map((version) => (
-      <div key={version.id} className="version-item">
-        <span>
-          {new Date(version.timestamp).toLocaleString()}
-        </span>
-
-        <button
-          onClick={() => restoreVersion(version)}
-          className="btn btn-secondary"
-        >
-          Restore
-        </button>
-      </div>
-    ))}
-  </div>
-)}
+                <div className="version-history-panel">
+                  <h4>Version History</h4>
+                  {versionHistory.slice(0, 5).map((version) => (
+                    <div key={version.id} className="version-item">
+                      <span>
+                        {new Date(version.timestamp).toLocaleString()}
+                      </span>
+                      <button
+                        onClick={() => restoreVersion(version)}
+                        className="btn btn-secondary"
+                      >
+                        Restore
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
               <div className="tabs">
                 <button
                   onClick={() => setActiveTab('code')}
