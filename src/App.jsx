@@ -27,12 +27,10 @@ function App() {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
 
+        {/* Home/Landing - Public */}
+        <Route path="/" element={<Home />} />
+
         {/* Protected Routes */}
-        <Route path="/" element={
-          <ProtectedRoute>
-            <Home />
-          </ProtectedRoute>
-        } />
         <Route path="/generator" element={
           <ProtectedRoute>
             <Generator />

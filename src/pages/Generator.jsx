@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef, useCallback } from "react";
 import axios from "axios";
 import "../styles/Generator.css";
 import Navbar from "../components/Navbar";
+import useLocalStorage from '../utils/useLocalStorage';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
 
@@ -43,28 +44,14 @@ const Generator = () => {
     document.title = "Workspace | AutoDoc.ai";
   }, []);
 
-  const [repoUrl, setRepoUrl] = useState(() => {
-    try {
-      return localStorage.getItem("autodoc_repo_url") || "";
-    } catch (e) {
-      return "";
-    }
-  });
-  const [customInstructions, setCustomInstructions] = useState(() => {
-    try {
-      return localStorage.getItem("autodoc_custom_instructions") || "";
-    } catch (e) {
-      return "";
-    }
-  });
+  // --- REFACTORED STATE USING CUSTOM HOOK ---
+  const [repoUrl, setRepoUrl] = useLocalStorage("autodoc_repo_url", "");
+  const [customInstructions, setCustomInstructions] = useLocalStorage("autodoc_custom_instructions", "");
   const [isGenerating, setIsGenerating] = useState(false);
-  const [markdownOutput, setMarkdownOutput] = useState(() => {
-    try {
-      return localStorage.getItem("autodoc_markdown_output") || "";
-    } catch (e) {
-      return "";
-    }
-  });
+  const [markdownOutput, setMarkdownOutput] = useLocalStorage("autodoc_markdown_output", "");
+  const [versionHistory, setVersionHistory] = useLocalStorage("autodoc_version_history", []);
+  // ------------------------------------------
+
   const [activeTab, setActiveTab] = useState('code');
   const [copied, setCopied] = useState(false);
   const [downloaded, setDownloaded] = useState(false);
@@ -100,6 +87,8 @@ const Generator = () => {
     }
   }, [repoUrl, customInstructions]);
 
+  const [previousMarkdown, setPreviousMarkdown] = useState("");
+  
   // Cleanup SSE on unmount
   useEffect(() => {
     return () => {
@@ -108,31 +97,6 @@ const Generator = () => {
       }
     };
   }, []);
-
-  // Save to localStorage
-  useEffect(() => {
-    try {
-      localStorage.setItem("autodoc_repo_url", repoUrl);
-    } catch (e) {
-      console.warn("Failed to save repoUrl to localStorage:", e);
-    }
-  }, [repoUrl]);
-
-  useEffect(() => {
-    try {
-      localStorage.setItem("autodoc_custom_instructions", customInstructions);
-    } catch (e) {
-      console.warn("Failed to save customInstructions to localStorage:", e);
-    }
-  }, [customInstructions]);
-
-  useEffect(() => {
-    try {
-      localStorage.setItem("autodoc_markdown_output", markdownOutput);
-    } catch (e) {
-      console.warn("Failed to save markdownOutput to localStorage:", e);
-    }
-  }, [markdownOutput]);
 
   const handleUrlChange = (e) => {
     setRepoUrl(e.target.value);
@@ -199,6 +163,19 @@ const Generator = () => {
         if (data.status === "completed") {
           const md = data.markdown || '';
           setMarkdownOutput(md);
+          if (previousMarkdown && data.markdown && previousMarkdown !== data.markdown) {
+            setVersionHistory((prev) => [
+              {
+                id: Date.now(),
+                timestamp: new Date().toISOString(),
+                repoUrl,
+                content: previousMarkdown,
+              },
+              ...prev,
+            ]);
+          }
+
+          setMarkdownOutput(data.markdown || '');
           setIsGenerating(false);
           setJobPhase('completed');
           setJobMessage('Documentation generated successfully!');
@@ -224,8 +201,11 @@ const Generator = () => {
       setIsGenerating(false);
       es.close();
     };
-  }, []);
 
+    return () => {
+      es.close();
+    };
+  }, [previousMarkdown, repoUrl, setMarkdownOutput, setVersionHistory]);
 
   const handleGenerate = async () => {
     const trimmedUrl = repoUrl.trim();
@@ -248,6 +228,7 @@ const Generator = () => {
     setJobPhase('queued');
     setJobMessage('Submitting job...');
     setJobProgress({ filesProcessed: 0, totalFiles: 0 });
+    setPreviousMarkdown(markdownOutput);
     setMarkdownOutput('');
     setError('');
 
@@ -294,6 +275,18 @@ const Generator = () => {
         savedGenRef.current = false;
         connectToJobStatus(data.jobId);
       } else if (data.markdown) {
+        // Synchronous fallback
+        if (previousMarkdown && previousMarkdown !== data.markdown) {
+          setVersionHistory((prev) => [
+            {
+              id: Date.now(),
+              timestamp: new Date().toISOString(),
+              repoUrl,
+              content: previousMarkdown,
+            },
+            ...prev,
+          ]);
+        }
         setMarkdownOutput(data.markdown);
         setIsGenerating(false);
         setJobPhase('completed');
@@ -306,6 +299,10 @@ const Generator = () => {
       setShouldShake(true);
       setTimeout(() => setShouldShake(false), 400);
     }
+  };
+
+  const restoreVersion = (version) => {
+    setMarkdownOutput(version.content);
   };
 
   const handleClear = () => {
@@ -322,13 +319,52 @@ const Generator = () => {
     }
   };
 
+  const fallbackCopyText = (text) => {
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+    textArea.style.position = "fixed";
+    textArea.style.top = "0";
+    textArea.style.left = "0";
+    textArea.style.width = "2em";
+    textArea.style.height = "2em";
+    textArea.style.padding = "0";
+    textArea.style.border = "none";
+    textArea.style.outline = "none";
+    textArea.style.boxShadow = "none";
+    textArea.style.background = "transparent";
+    textArea.style.opacity = "0";
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    try {
+      const successful = document.execCommand("copy");
+      if (successful) {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      } else {
+        console.error("Fallback copy command was unsuccessful");
+      }
+    } catch (err) {
+      console.error("Fallback copy failed:", err);
+    }
+    document.body.removeChild(textArea);
+  };
+
   const handleCopyCode = () => {
     if (!markdownOutput) return;
-    navigator.clipboard.writeText(markdownOutput);
-    setCopied(true);
-    setTimeout(() => {
-      setCopied(false);
-    }, 2000);
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(markdownOutput)
+        .then(() => {
+          setCopied(true);
+          setTimeout(() => setCopied(false), 2000);
+        })
+        .catch((err) => {
+          console.error("Failed to copy via navigator.clipboard, trying fallback:", err);
+          fallbackCopyText(markdownOutput);
+        });
+    } else {
+      fallbackCopyText(markdownOutput);
+    }
   };
 
   const extractRepoName = (url) => {
@@ -551,6 +587,24 @@ const Generator = () => {
           <div className="output-header">
             <div className="output-header-left">
               <h3>Generated Documentation</h3>
+              {versionHistory.length > 0 && (
+                <div className="version-history-panel">
+                  <h4>Version History</h4>
+                  {versionHistory.slice(0, 5).map((version) => (
+                    <div key={version.id} className="version-item">
+                      <span>
+                        {new Date(version.timestamp).toLocaleString()}
+                      </span>
+                      <button
+                        onClick={() => restoreVersion(version)}
+                        className="btn btn-secondary"
+                      >
+                        Restore
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
               <div className="tabs">
                 <button
                   onClick={() => setActiveTab('code')}

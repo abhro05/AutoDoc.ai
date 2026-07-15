@@ -1,6 +1,8 @@
 
 import React, { useState } from "react";
 import { NavLink, Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { NavLink, useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import ThemeToggle from "./ThemeToggle";
 import "./Navbar.css";
@@ -22,6 +24,8 @@ const Navbar = () => {
     logout();
     navigate("/login");
     closeAll();
+    navigate("/");
+    setIsOpen(false);
   };
 
   return (
@@ -46,12 +50,21 @@ const Navbar = () => {
             Contributors
           </NavLink>
         </li>
-        {user && (
+        {user ? (
           <li className="logout-mobile">
             <button onClick={handleLogout} className="logout-btn-mobile">
               Logout
             </button>
           </li>
+        ) : (
+          <>
+            <li className="login-mobile">
+              <Link to="/login" onClick={toggleMenu}>Login</Link>
+            </li>
+            <li className="signup-mobile">
+              <Link to="/signup" onClick={toggleMenu}>Sign Up</Link>
+            </li>
+          </>
         )}
       </ul>
 
@@ -70,6 +83,10 @@ const Navbar = () => {
               <svg className="user-dropdown-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <polyline points="6 9 12 15 18 9" />
               </svg>
+        {user ? (
+          <div className="user-info">
+            <button onClick={handleLogout} className="logout-btn">
+              Logout
             </button>
             <div className="user-dropdown-menu">
               <Link to="/dashboard" className="user-dropdown-item" onClick={closeAll}>
@@ -98,6 +115,11 @@ const Navbar = () => {
                 Logout
               </button>
             </div>
+          </div>
+        ) : (
+          <div className="auth-links">
+            <Link to="/login" className="nav-login-btn">Login</Link>
+            <Link to="/signup" className="nav-signup-btn">Sign Up</Link>
           </div>
         )}
         <ThemeToggle />

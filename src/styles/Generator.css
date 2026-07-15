@@ -630,3 +630,17 @@
     font-size: 0.68rem;
   }
 }
+
+.version-history-panel {
+  margin-top: 12px;
+  padding: 12px;
+  border: 1px solid #333;
+  border-radius: 8px;
+}
+
+.version-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 8px 0;
+}
