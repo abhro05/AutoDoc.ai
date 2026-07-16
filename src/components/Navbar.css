@@ -166,34 +166,6 @@ body {
   }
 }
 
-/* Add these styles to existing Navbar.css */
-
-/* User Info & Logout Button - Desktop */
-
-.logout-btn {
-  background: none;
-  border: 1px solid #ef4444;
-  color: #ef4444;
-  padding: 0.4rem 0.9rem;
-  border-radius: 999px;
-  cursor: pointer;
-  font-size: 0.8rem;
-  font-weight: 500;
-  transition: all 0.2s ease;
-}
-
-.logout-btn:hover {
-  background: rgba(239, 68, 68, 0.15);
-  border-color: #dc2626;
-  color: #dc2626;
-  transform: translateY(-1px);
-}
-
-.logout-btn:active {
-  transform: translateY(0);
-}
-
-/* Mobile Logout Button - Danger/Red Color */
 .logout-mobile {
   margin-top: 0.5rem;
 }
@@ -218,22 +190,140 @@ body {
   color: #dc2626;
 }
 
-/* Adjust nav-actions for better spacing */
-.nav-actions {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
- 
- 
+@media (min-width: 769px) {
   .logout-mobile {
-    display: block;
+    display: none;
   }
 }
 
+.user-dropdown {
+  position: relative;
+}
+
+.user-dropdown-trigger {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: none;
+  border: 1px solid var(--border-color);
+  border-radius: 999px;
+  padding: 0.3rem 0.6rem 0.3rem 0.3rem;
+  cursor: pointer;
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 0.85rem;
+  transition: border-color 0.2s ease;
+}
+
+.user-dropdown-trigger:hover {
+  border-color: var(--accent-color);
+}
+
+.user-dropdown-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.user-dropdown-initial {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--accent-color);
+  color: #000;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.user-dropdown-name {
+  font-weight: 500;
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.user-dropdown-chevron {
+  color: var(--text-tertiary);
+  transition: transform 0.2s ease;
+}
+
+.user-dropdown:hover .user-dropdown-chevron {
+  transform: rotate(180deg);
+}
+
+.user-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  min-width: 190px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 0.35rem;
+  box-shadow: var(--shadow-lg);
+  opacity: 0;
+  transform: translateY(-8px);
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  z-index: 1100;
+}
+
+.user-dropdown:hover .user-dropdown-menu,
+.user-dropdown:focus-within .user-dropdown-menu {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.user-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  color: var(--text-primary);
+  text-decoration: none;
+  font-size: 0.85rem;
+  transition: background 0.15s ease;
+  cursor: pointer;
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+  font-family: inherit;
+}
+
+.user-dropdown-item:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.user-dropdown-item svg {
+  flex-shrink: 0;
+  color: var(--text-tertiary);
+}
+
+.user-dropdown-logout {
+  color: #ef4444 !important;
+}
+
+.user-dropdown-logout:hover {
+  background: rgba(239, 68, 68, 0.1) !important;
+}
+
+.user-dropdown-logout svg {
+  color: #ef4444 !important;
+}
+
+.user-dropdown-divider {
+  border: none;
+  border-top: 1px solid var(--border-color);
+  margin: 0.25rem 0;
+}
+
+@media (max-width: 768px) {
+  .user-dropdown {
 .auth-links {
   display: flex;
   align-items: center;

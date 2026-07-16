@@ -115,6 +115,36 @@ export const AuthProvider = ({ children }) => {
     return { success: true };
   };
 
+  const refreshProfile = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) return;
+
+      const response = await axios.get(`${API_BASE_URL}/api/user/me`);
+      if (response.data.success) {
+        const profile = response.data.user;
+        const userData = {
+          id: profile._id || profile.id,
+          name: profile.name,
+          email: profile.email,
+          avatarUrl: profile.avatarUrl,
+          authProvider: profile.authProvider,
+          bio: profile.bio,
+          createdAt: profile.createdAt,
+        };
+        localStorage.setItem('user', JSON.stringify(userData));
+        setUser(userData);
+      }
+    } catch {
+      /* silent fail */
+    }
+  };
+
+  const updateUser = (userData) => {
+    localStorage.setItem('user', JSON.stringify(userData));
+    setUser(userData);
+  };
+
   const logout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
@@ -127,7 +157,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, signup, signInWithGoogle, signInWithGithub, logout, loading }}>
+    <AuthContext.Provider value={{ user, login, signup, signInWithGoogle, signInWithGithub, logout, loading, refreshProfile, updateUser }}>
       {children}
     </AuthContext.Provider>
   );
